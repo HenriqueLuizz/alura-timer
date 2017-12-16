@@ -1,4 +1,5 @@
 const data = require('../data');
+const { ipcMain } = require('electron');
 
 module.exports = {
     
@@ -41,5 +42,80 @@ module.exports = {
         })
 
         return this.templateInicial;
+    },
+    geraMenuPrincipalTemplate(app){
+
+    let templateMenu = [{
+        label: 'Edit',
+        submenu: [
+          {role: 'undo'},
+          {role: 'redo'},
+          {type: 'separator'},
+          {role: 'cut'},
+          {role: 'copy'},
+          {role: 'paste'},
+          {role: 'pasteandmatchstyle'},
+          {role: 'delete'},
+          {role: 'selectall'}
+        ]
+      },
+      {
+        label: 'View',
+        submenu: [
+          {role: 'reload'},
+          {role: 'forcereload'},
+          {role: 'toggledevtools'},
+          {type: 'separator'},
+          {role: 'resetzoom'},
+          {role: 'zoomin'},
+          {role: 'zoomout'},
+          {type: 'separator'},
+          {role: 'togglefullscreen'}
+        ]
+      },
+      {
+        role: 'window',
+        submenu: [
+            {
+                role: 'minimize',
+                accelerator: 'Alt+M'
+            },
+            {
+                role: 'close'
+            }
+        ]
+      },
+      {
+        role: 'help',
+        submenu: [
+          {
+            label: 'Learn More',
+            click () { require('electron').shell.openExternal('https://electron.atom.io') }
+          }
+        ]
+      },
+      {
+        label: 'Sobre',
+        submenu: [
+            {
+                label: 'Sobre o Timer',
+                accelerator: 'CmdOrCtrl+I',
+                click: () => {
+                    ipcMain.emit('abrir-janela-sobre');
+                }
+            }
+        ]
+    }];
+    if( process.platform == 'darwin' ){
+        templateMenu.unshift({
+            label: app.getName(),
+            submenu: [
+                {
+                label: 'Estou rodando no Mac!'
+                }
+            ]
+        });
+    }
+    return templateMenu;
     }
 }
